@@ -13,8 +13,8 @@ import {
 import closeImg from "../../assets/close.svg";
 import incomeImg from "../../assets/income.svg";
 import outcomeImg from "../../assets/outcome.svg";
-import { FormEvent, useState, useContext } from "react";
-import { TransactionsContext } from "../../TransactionsContext";
+import { FormEvent, useState } from "react";
+import { useTransactions } from "../../hooks/useTransaction";
 interface TransacTionModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
@@ -24,11 +24,11 @@ export function TransactionModal({
   isOpen,
   onRequestClose,
 }: TransacTionModalProps) {
-  const { createTransaction } = useContext(TransactionsContext);
+  const { createTransaction } = useTransactions();
   const [type, setType] = useState("deposit");
-  const [title, SetTitle] = useState("");
-  const [value, SetValue] = useState(0);
-  const [category, SetCategory] = useState("");
+  const [title, setTitle] = useState("");
+  const [value, setValue] = useState(0);
+  const [category, setCategory] = useState("");
   function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault();
     createTransaction({
@@ -37,6 +37,11 @@ export function TransactionModal({
       category,
       type,
     });
+    setTitle("");
+    setValue(0);
+    setCategory("");
+    setType("deposit");
+    onRequestClose();
   }
   return (
     <Modal
@@ -53,13 +58,13 @@ export function TransactionModal({
         <Input
           placeholder="Título"
           value={title}
-          onChange={(event) => SetTitle(event.target.value)}
+          onChange={(event) => setTitle(event.target.value)}
         />
         <Input
           placeholder="Valor"
           type="number"
           value={value}
-          onChange={(event) => SetValue(Number(event.target.value))}
+          onChange={(event) => setValue(Number(event.target.value))}
         />
         <TransactionTypeContainer>
           <DepositButton
@@ -89,7 +94,7 @@ export function TransactionModal({
         <Input
           placeholder="categoria"
           value={category}
-          onChange={(event) => SetCategory(event.target.value)}
+          onChange={(event) => setCategory(event.target.value)}
         />
         <SubmitButton type="submit">Cadastrar</SubmitButton>
       </Container>

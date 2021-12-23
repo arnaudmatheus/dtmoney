@@ -3,27 +3,47 @@ import incomeImg from "../../assets/income.svg";
 import outcomeImg from "../../assets/outcome.svg";
 import totalImg from "../../assets/total.svg";
 import { ContentCard } from "../ContentCard";
-import { useContext } from "react";
-import { TransactionsContext } from "../../TransactionsContext";
+import { useTransactions } from "../../hooks/useTransaction";
 
 export function Summary() {
-  const { transactions } = useContext(TransactionsContext);
-  console.log(transactions);
+  const { transactions } = useTransactions();
+  const money = transactions.reduce(
+    (acc, transaction) => {
+      if (transaction.type === "deposit") {
+        acc.income += transaction.value;
+        acc.total += transaction.value;
+      } else {
+        acc.withdraw += transaction.value;
+        acc.total -= transaction.value;
+      }
+      return acc;
+    },
+    {
+      income: 0,
+      withdraw: 0,
+      total: 0,
+    }
+  );
   return (
     <Container>
       <ContentCard
         title="Entrada"
         img={incomeImg}
-        value="R$ 1000"
+        value={money.income}
         color={true}
       />
       <ContentCard
         title="Saida"
         img={outcomeImg}
-        value="R$ -500"
+        value={money.withdraw}
         color={true}
       />
-      <ContentCard title="Total" img={totalImg} value="R$ 500" color={false} />
+      <ContentCard
+        title="Total"
+        img={totalImg}
+        value={money.total}
+        color={false}
+      />
     </Container>
   );
 }

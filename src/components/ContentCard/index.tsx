@@ -2,7 +2,7 @@ import { ContentBox, ContentHeader, Text } from "./styles";
 
 interface ContentCardProps {
   title: string;
-  value: string;
+  value: number;
   img: string;
   color?: boolean;
 }
@@ -16,7 +16,12 @@ export function ContentCard({ title, value, img, color }: ContentCardProps) {
             <p>{title}</p>
             <img src={img} alt="entradas" />
           </ContentHeader>
-          <Text>{value}</Text>
+          <Text>
+            {new Intl.NumberFormat("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }).format(value)}
+          </Text>
         </ContentBox>
       ) : (
         <ContentBox className="total">
@@ -24,7 +29,12 @@ export function ContentCard({ title, value, img, color }: ContentCardProps) {
             <p>{title}</p>
             <img src={img} alt="entradas" />
           </ContentHeader>
-          <Text>{value}</Text>
+          <Text>
+            {new Intl.NumberFormat("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }).format(value)}
+          </Text>
         </ContentBox>
       )}
     </>
